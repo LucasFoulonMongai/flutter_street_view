@@ -16,7 +16,8 @@ import 'package:integration_test/integration_test.dart';
 
 void main() {
   final IntegrationTestWidgetsFlutterBinding binding =
-      IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+      IntegrationTestWidgetsFlutterBinding.ensureInitialized()
+          as IntegrationTestWidgetsFlutterBinding;
   // George St, Sydney
   const LatLng SYDNEY = LatLng(-33.87365, 151.20689);
 
