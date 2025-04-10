@@ -27,7 +27,8 @@ class FlutterGoogleStreetView(
     creationParams: Map<String?, Any?>?,
     binaryMessenger: BinaryMessenger,
     lifecycleProvider: Lifecycle
-) : DefaultLifecycleObserver, OnSaveInstanceStateListener, PlatformView, MethodChannel.MethodCallHandler, StreetViewListener {
+) : DefaultLifecycleObserver, OnSaveInstanceStateListener, PlatformView,
+    MethodChannel.MethodCallHandler, StreetViewListener {
 
     companion object {
         private val lockStreetView = HashMap<StreetViewPanoramaView, Boolean>()
@@ -41,18 +42,19 @@ class FlutterGoogleStreetView(
     private var streetViewPanorama: StreetViewPanorama? = null
     private val methodChannel: MethodChannel
     private var viewReadyResult: MethodChannel.Result? = null
-    private var lastMoveToPos : LatLng? = null
-    private var lastMoveToPanoId:String? = null
+    private var lastMoveToPos: LatLng? = null
+    private var lastMoveToPanoId: String? = null
     private var creationParams: Map<String?, Any?>? = null
     private var reuseStreetView = false
+
     init {
         this.creationParams = creationParams
         initOptions = createInitOption(creationParams)
         for (it in lockStreetView) {
             Log.d(dTag, "try reuse streetView:${lockStreetView.size}")
-            val sv:StreetViewPanoramaView = it.key
-            val inUse:Boolean = it.value
-            if(!inUse) {
+            val sv: StreetViewPanoramaView = it.key
+            val inUse: Boolean = it.value
+            if (!inUse) {
                 reuseStreetView = true
                 sv.id = id
                 streetView = sv
@@ -153,7 +155,7 @@ class FlutterGoogleStreetView(
         if (disposed) {
             return
         }
-        if(reuseStreetView){
+        if (reuseStreetView) {
             streetView?.onResume()
             return
         }
@@ -221,10 +223,10 @@ class FlutterGoogleStreetView(
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-/*        val info = call.let {
-            "method:${it.method}, " + if (it.arguments != null) "arg:${it.arguments}" else ""
-        }
-        Log.d(dTag, "onMethodCall info:$info")*/
+        /*        val info = call.let {
+                    "method:${it.method}, " + if (it.arguments != null) "arg:${it.arguments}" else ""
+                }
+                Log.d(dTag, "onMethodCall info:$info")*/
         when (call.method) {
             "streetView#waitForStreetView" -> {
                 val hasInitLocation = initOptions?.let {
@@ -242,6 +244,7 @@ class FlutterGoogleStreetView(
                     updateInitOptions(creationParams, result)
                 }
             }
+
             "streetView#updateOptions" -> updateInitOptions(call.arguments, result)
             "streetView#animateTo" -> {
                 if (streetView != null) {
@@ -255,6 +258,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#getLocation" -> {
                 if (streetView != null) {
                     result.success(getLocation())
@@ -266,6 +270,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#getPanoramaCamera" -> {
                 if (streetView != null) {
                     result.success(getPanoramaCamera())
@@ -277,6 +282,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#isPanningGesturesEnabled" -> {
                 if (streetView != null) {
                     result.success(isPanningGesturesEnabled())
@@ -288,6 +294,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#isStreetNamesEnabled" -> {
                 if (streetView != null) {
                     result.success(isStreetNamesEnabled())
@@ -299,6 +306,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#isUserNavigationEnabled" -> {
                 if (streetView != null) {
                     result.success(isUserNavigationEnabled())
@@ -310,6 +318,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#isZoomGesturesEnabled" -> {
                 if (streetView != null) {
                     result.success(isZoomGesturesEnabled())
@@ -321,6 +330,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#orientationToPoint" -> {
                 if (streetView != null) {
                     result.success(orientationToPoint(call.arguments)?.let { Convert.pointToJson(it) })
@@ -332,6 +342,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#pointToOrientation" -> {
                 if (streetView != null) {
                     result.success(pointToOrientation(call.arguments)?.let {
@@ -347,6 +358,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#movePos" -> {
                 if (streetView != null) {
                     setPosition(call.arguments)
@@ -359,6 +371,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#setPanningGesturesEnabled" -> {
                 if (streetView != null) {
                     setPanningGesturesEnabled(call.arguments)
@@ -371,6 +384,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#setStreetNamesEnabled" -> {
                 if (streetView != null) {
                     setStreetNamesEnabled(call.arguments)
@@ -383,6 +397,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#setUserNavigationEnabled" -> {
                 if (streetView != null) {
                     setUserNavigationEnabled(call.arguments)
@@ -395,6 +410,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#setZoomGesturesEnabled" -> {
                 if (streetView != null) {
                     setZoomGesturesEnabled(call.arguments)
@@ -407,6 +423,7 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+
             "streetView#deactivate" -> {
                 deactivateStreetView()
                 result.success(null)
@@ -430,12 +447,12 @@ class FlutterGoogleStreetView(
                 Log.d(dTag, this.toString())
                 setPosition(arg)
 
-                this["panningGesturesEnabled"]?.also { setPanningGesturesEnabled(it)}
+                this["panningGesturesEnabled"]?.also { setPanningGesturesEnabled(it) }
                 this["streetNamesEnabled"]?.also { setStreetNamesEnabled(it) }
                 this["userNavigationEnabled"]?.also { setUserNavigationEnabled(it) }
                 this["zoomGesturesEnabled"]?.also { setZoomGesturesEnabled(it) }
 
-                if(this.containsKey("bearing") || this.containsKey("tilt") || this.containsKey("zoom")) {
+                if (this.containsKey("bearing") || this.containsKey("tilt") || this.containsKey("zoom")) {
                     val tmp = hashMapOf<String, Any>()
                     this["bearing"]?.also { tmp["bearing"] = it }
                     this["tilt"]?.also { tmp["tilt"] = it }
@@ -624,11 +641,11 @@ class FlutterGoogleStreetView(
                 viewReadyResult = null
             }
         }
-        val arg = if (location.links.isNotEmpty()) location.let {
+        val arg = location?.let {
             Convert.streetViewPanoramaLocationToJson(
                 it
             )
-        } else mutableMapOf<String, Any>().apply {
+        } ?: mutableMapOf<String, Any>().apply {
             val errorMsg = if (lastMoveToPos != null)
                 "Oops..., no valid panorama found with position:${lastMoveToPos!!.latitude}, ${lastMoveToPos!!.longitude}, try to change `position`, `radius` or `source`."
             else if (lastMoveToPanoId != null)
