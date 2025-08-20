@@ -1,5 +1,9 @@
-// Copyright 2013 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+import 'dart:ui_web' as ui;
 
-export 'dart:ui';
+// ignore: camel_case_types
+class platformViewRegistry {
+  static void registerViewFactory(String viewId, dynamic cb) {
+    // ignore:undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(viewId, cb);
+  }
+}

@@ -140,7 +140,7 @@ class FlutterGoogleStreetViewPlugin {
     _plugins[_viewId] ??= this;
     ui.platformViewRegistry.registerViewFactory(
       _getViewType(_viewId),
-      (int viewId) => HtmlElement.new()
+      (int viewId) => html.HtmlElement()
         ..id = _div.id
         ..style.width = _div.style.width
         ..style.height = _div.style.height,
